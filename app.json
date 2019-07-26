@@ -1,0 +1,18 @@
+{
+  "env": {
+    "SECRET_KEY_BASE": {
+      "generator": "secret"
+    },
+    "REDMINE_LANG": {
+      "value": "en"
+    }
+  },
+  "addons": [
+    "heroku-postgresql"
+  ],
+  "buildpacks": [
+    {
+      "url": "https://github.com/ryandotsmith/null-buildpack"
+    }
+  ]
+}
