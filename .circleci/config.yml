@@ -1,6 +1,7 @@
 version: 2.1
 
 orbs:
+  heroku: circleci/heroku@0.0.8
   redmine: agileware-jp/redmine-plugin@0.0.13
 
 workflows:
@@ -12,3 +13,5 @@ workflows:
       - redmine/test:
           executor: redmine/ruby-pg
           requires: [redmine/download]
+          after-script:
+            - heroku/install
