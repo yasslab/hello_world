@@ -2,7 +2,64 @@ version: 2.1
 
 orbs:
   heroku: circleci/heroku@0.0.8
-  redmine: agileware-jp/redmine-plugin@0.0.13
+  redmine: agileware-jp/redmine-plugin@dev:c39794f
+
+executors:
+  ruby-26:
+    docker:
+      - image: circleci/ruby:latest
+
+jobs:
+  deploy-review-app:
+    executor: ruby-26
+    steps:
+      - run: |
+          set -e
+          if [ -z "$CIRCLE_PULL_REQUEST" ]; then
+            echo "Not create pull request yet."
+            exit 1
+          fi
+      - attach_workspace:
+          at: ~/project
+      - heroku/install
+      - run: |
+          set -e
+          echo 'vendor/bundle' >> .gitignore
+          cat \<<-'EOF' > Procfile
+          web: bin/rails s
+          EOF
+          cat \<<-'EOF' > config/database.yml
+          production:
+            adapter: postgresql
+          EOF
+      - run: |
+          set -e
+          ruby -e 'puts "ruby #{RUBY_VERSION.inspect}"' >> Gemfile
+          echo "gem 'rails_12factor', group: 'production'" >> Gemfile
+          bundle lock
+      - run: |
+          set -e
+          git config --global user.email "seiei@yasslab.jp"
+          git config --global user.name "Seiei Miyagi"
+          git init
+          git add .
+          git add -f Gemfile.lock
+          git add -f config/database.yml
+          git commit -m 'deploy'
+      - run: |
+          set -e
+          export HEROKU_APP_NAME=$(heroku pipelines:info --json redmine-review-app | ruby -rjson -e 'puts JSON.parse($stdin.read).fetch("apps").detect { |a| a.dig("coupling", "stage") == "review" && a.fetch("git_url").end_with?("#{ENV.fetch("CIRCLE_PULL_REQUEST")[/\d+$/]}.git") }&.fetch("name")')
+          if [ -z "$HEROKU_APP_NAME" ]; then
+            echo "heroku review apps not found."
+            exit 1
+          fi
+
+          heroku buildpacks:clear --app $HEROKU_APP_NAME
+          git push -f https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git HEAD:master
+          heroku pg:copy --app $HEROKU_APP_NAME --confirm $HEROKU_APP_NAME redmine-review-app-production::DATABASE_URL DATABASE_URL
+          heroku run --app $HEROKU_APP_NAME bin/rails db:migrate
+          heroku run --app $HEROKU_APP_NAME bin/rails redmine:load_default_data
+          heroku ps:scale --app $HEROKU_APP_NAME web=1
 
 workflows:
   version: 2
@@ -11,7 +68,8 @@ workflows:
       - redmine/download:
           redmine_version: '4.0.4'
       - redmine/test:
-          executor: redmine/ruby-pg
+          executor: redmine/ruby-26-pg
           requires: [redmine/download]
           after-script:
-            - heroku/install
+      - deploy-review-app:
+          requires: [redmine/test]
