@@ -7,24 +7,144 @@ workflows:
   version: 2
   test:
     jobs:
+      # trunk
       - redmine-plugin/download:
           name: download-trunk
           redmine_version: trunk
+      ## trunk pg
       - redmine-plugin/test:
-          name: trunk-pg
-          executor: redmine-plugin/ruby-pg
+          name: trunk-26-pg
+          executor: redmine-plugin/ruby-26-pg
           requires: [download-trunk]
+      - redmine-plugin/test:
+          name: trunk-25-pg
+          executor: redmine-plugin/ruby-25-pg
+          requires: [download-trunk]
+      - redmine-plugin/test:
+          name: trunk-24-pg
+          executor: redmine-plugin/ruby-24-pg
+          requires: [download-trunk]
+      - redmine-plugin/test:
+          name: trunk-23-pg
+          executor: redmine-plugin/ruby-23-pg
+          requires: [download-trunk]
+      ## trunk mysql
+      - redmine-plugin/test:
+          name: trunk-26-mysql
+          executor: redmine-plugin/ruby-26-mysql
+          requires: [download-trunk]
+      - redmine-plugin/test:
+          name: trunk-25-mysql
+          executor: redmine-plugin/ruby-25-mysql
+          requires: [download-trunk]
+      - redmine-plugin/test:
+          name: trunk-24-mysql
+          executor: redmine-plugin/ruby-24-mysql
+          requires: [download-trunk]
+      - redmine-plugin/test:
+          name: trunk-23-mysql
+          executor: redmine-plugin/ruby-23-mysql
+          requires: [download-trunk]
+      ## trunk sqlite3
+      - redmine-plugin/test:
+          name: trunk-26-sqlite3
+          executor: redmine-plugin/ruby-26-sqlite3
+          requires: [download-trunk]
+      - redmine-plugin/test:
+          name: trunk-25-sqlite3
+          executor: redmine-plugin/ruby-25-sqlite3
+          requires: [download-trunk]
+      - redmine-plugin/test:
+          name: trunk-24-sqlite3
+          executor: redmine-plugin/ruby-24-sqlite3
+          requires: [download-trunk]
+      - redmine-plugin/test:
+          name: trunk-23-sqlite3
+          executor: redmine-plugin/ruby-23-sqlite3
+          requires: [download-trunk]
+      # 4.0
       - redmine-plugin/download:
           name: download-4-0
           redmine_version: 4.0.5
+      ## 4.0 pg
       - redmine-plugin/test:
-          name: 40-pg
-          executor: redmine-plugin/ruby-pg
+          name: 40-25-pg
+          executor: redmine-plugin/ruby-25-pg
           requires: [download-4-0]
+      - redmine-plugin/test:
+          name: 40-24-pg
+          executor: redmine-plugin/ruby-24-pg
+          requires: [download-4-0]
+      - redmine-plugin/test:
+          name: 40-23-pg
+          executor: redmine-plugin/ruby-23-pg
+          requires: [download-4-0]
+      ## 4.0 mysql
+      - redmine-plugin/test:
+          name: 40-25-mysql
+          executor: redmine-plugin/ruby-25-mysql
+          requires: [download-4-0]
+      - redmine-plugin/test:
+          name: 40-24-mysql
+          executor: redmine-plugin/ruby-24-mysql
+          requires: [download-4-0]
+      - redmine-plugin/test:
+          name: 40-23-mysql
+          executor: redmine-plugin/ruby-23-mysql
+          requires: [download-4-0]
+      ## 4.0 sqlite3
+      - redmine-plugin/test:
+          name: 40-25-sqlite3
+          executor: redmine-plugin/ruby-25-sqlite3
+          requires: [download-4-0]
+      - redmine-plugin/test:
+          name: 40-24-sqlite3
+          executor: redmine-plugin/ruby-24-sqlite3
+          requires: [download-4-0]
+      - redmine-plugin/test:
+          name: 40-23-sqlite3
+          executor: redmine-plugin/ruby-23-sqlite3
+          requires: [download-4-0]
+      # 3.4
       - redmine-plugin/download:
           name: download-3-4
           redmine_version: 3.4.12
+      ## 3.4 pg
       - redmine-plugin/test:
-          name: 34-pg
-          executor: redmine-plugin/ruby-pg
+          name: 34-24-pg
+          executor: redmine-plugin/ruby-24-pg
+          requires: [download-3-4]
+      - redmine-plugin/test:
+          name: 34-23-pg
+          executor: redmine-plugin/ruby-23-pg
+          requires: [download-3-4]
+      - redmine-plugin/test:
+          name: 34-22-pg
+          executor: redmine-plugin/ruby-22-pg
+          requires: [download-3-4]
+      ## 3.4 mysql
+      - redmine-plugin/test:
+          name: 34-24-mysql
+          executor: redmine-plugin/ruby-24-mysql
+          requires: [download-3-4]
+      - redmine-plugin/test:
+          name: 34-23-mysql
+          executor: redmine-plugin/ruby-23-mysql
+          requires: [download-3-4]
+      - redmine-plugin/test:
+          name: 34-22-mysql
+          executor: redmine-plugin/ruby-22-mysql
+          requires: [download-3-4]
+      ## 3.4 sqlite3
+      - redmine-plugin/test:
+          name: 34-24-sqlite3
+          executor: redmine-plugin/ruby-24-sqlite3
+          requires: [download-3-4]
+      - redmine-plugin/test:
+          name: 34-23-sqlite3
+          executor: redmine-plugin/ruby-23-sqlite3
+          requires: [download-3-4]
+      - redmine-plugin/test:
+          name: 34-22-sqlite3
+          executor: redmine-plugin/ruby-22-sqlite3
           requires: [download-3-4]
