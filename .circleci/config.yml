@@ -10,11 +10,14 @@ workflows:
       - redmine-plugin/download:
           redmine_version: trunk
       - redmine-plugin/test:
+          name: trunk-pg
           executor: redmine-plugin/ruby-pg
           requires: [redmine-plugin/download]
       - redmine-plugin/test:
+          name: trunk-mysql
           executor: redmine-plugin/ruby-mysql
           requires: [redmine-plugin/download]
       - redmine-plugin/test:
+          name: trunk-sqlite3
           executor: redmine-plugin/ruby-sqlite3
           requires: [redmine-plugin/download]
