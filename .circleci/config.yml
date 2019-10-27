@@ -1,14 +1,20 @@
 version: 2.1
 
 orbs:
-  redmine: agileware-jp/redmine-plugin@0.0.22
+  redmine-plugin: agileware-jp/redmine-plugin@0.0.22
 
 workflows:
   version: 2
   test:
     jobs:
-      - redmine/download:
+      - redmine-plugin/download:
           redmine_version: trunk
-      - redmine/test:
-          executor: redmine/ruby-pg
-          requires: [redmine/download]
+      - redmine-plugin/test:
+          executor: redmine-plugin/ruby-pg
+          requires: [redmine-plugin/download]
+      - redmine-plugin/test:
+          executor: redmine-plugin/ruby-mysql
+          requires: [redmine-plugin/download]
+      - redmine-plugin/test:
+          executor: redmine-plugin/ruby-sqlite3
+          requires: [redmine-plugin/download]
