@@ -11,8 +11,20 @@ workflows:
           name: download-trunk
           redmine_version: trunk
       - redmine-plugin/download:
-          name: download-4.0
+          name: download-4-0
           redmine_version: 4.0.5
       - redmine-plugin/download:
-          name: download-3.4
+          name: download-3-4
           redmine_version: 3.4.12
+      - redmine-plugin/test:
+          name: trunk-pg
+          executor: redmine-plugin/ruby-pg
+          requires: [download-trunk]
+      - redmine-plugin/test:
+          name: 40-pg
+          executor: redmine-plugin/ruby-pg
+          requires: [download-4-0]
+      - redmine-plugin/test:
+          name: 34-pg
+          executor: redmine-plugin/ruby-pg
+          requires: [download-3-4]
