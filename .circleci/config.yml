@@ -8,20 +8,11 @@ workflows:
   test:
     jobs:
       - redmine-plugin/download:
+          name: download-trunk
           redmine_version: trunk
-      - redmine-plugin/test:
-          name: trunk-26-pg
-          executor: redmine-plugin/ruby-26-pg
-          requires: [redmine-plugin/download]
-      - redmine-plugin/test:
-          name: trunk-25-pg
-          executor: redmine-plugin/ruby-26-pg
-          requires: [redmine-plugin/download]
-      - redmine-plugin/test:
-          name: trunk-24-pg
-          executor: redmine-plugin/ruby-24-pg
-          requires: [redmine-plugin/download]
-      - redmine-plugin/test:
-          name: trunk-23-pg
-          executor: redmine-plugin/ruby-23-pg
-          requires: [redmine-plugin/download]
+      - redmine-plugin/download:
+          name: download-4.0
+          redmine_version: 4.0.5
+      - redmine-plugin/download:
+          name: download-3.4
+          redmine_version: 3.4.12
