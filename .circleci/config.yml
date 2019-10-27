@@ -1,14 +1,14 @@
 version: 2.1
 
 orbs:
-  redmine: agileware-jp/redmine-plugin@0.0.13
+  redmine: agileware-jp/redmine-plugin@0.0.22
 
 workflows:
   version: 2
   test:
     jobs:
       - redmine/download:
-          redmine_version: '4.0.4'
+          redmine_version: trunk
       - redmine/test:
           executor: redmine/ruby-pg
           requires: [redmine/download]
